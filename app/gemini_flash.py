@@ -1,20 +1,20 @@
 """
-Groq Flash - Comic Panel Outline Generator.
-Uses Groq API with Llama model for fast structured 5-panel comic outlines.
+Gemini Flash - Comic Panel Outline Generator.
+Uses Google Gemini 1.5 Flash to generate structured 5-panel comic outlines.
 """
 import os
 import json
 import re
-from groq import Groq
+import google.generativeai as genai
 from dotenv import load_dotenv
 
 load_dotenv()
 
-# Initialize Groq client
-client = Groq(api_key=os.getenv("GROQ_API_KEY"))
+# Configure Gemini API
+genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 
-# Use a fast model for outline generation
-MODEL = "llama-3.1-8b-instant"
+# Initialize the Gemini Flash model
+model = genai.GenerativeModel("gemini-1.5-flash")
 
 
 def generate_outline(story_prompt: str, character_name: str = "Hero",
@@ -62,16 +62,8 @@ Example format:
 """
 
     try:
-        response = client.chat.completions.create(
-            model=MODEL,
-            messages=[
-                {"role": "system", "content": "You are a professional comic book writer. Always respond with valid JSON only."},
-                {"role": "user", "content": prompt}
-            ],
-            temperature=0.7,
-            max_tokens=2048,
-        )
-        response_text = response.choices[0].message.content.strip()
+        response = model.generate_content(prompt)
+        response_text = response.text.strip()
 
         # Clean up the response - remove markdown code blocks if present
         response_text = re.sub(r'```json\s*', '', response_text)

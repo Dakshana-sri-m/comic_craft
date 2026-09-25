@@ -1,18 +1,18 @@
 """
-Groq Pro - Comic Story Narration and Dialogue Generator.
-Uses Groq API with Llama 70B model to create detailed comic narration and character dialogues.
+Gemini Pro - Comic Story Narration and Dialogue Generator.
+Uses Google Gemini 1.5 Pro to create detailed comic narration and character dialogues.
 """
 import os
-from groq import Groq
+import google.generativeai as genai
 from dotenv import load_dotenv
 
 load_dotenv()
 
-# Initialize Groq client
-client = Groq(api_key=os.getenv("GROQ_API_KEY"))
+# Configure Gemini API
+genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 
-# Use a more capable model for story generation
-MODEL = "llama-3.1-70b-versatile"
+# Initialize the Gemini Pro model
+model = genai.GenerativeModel("gemini-1.5-pro")
 
 
 def generate_story(outline: list, character_name: str = "Hero",
@@ -63,16 +63,8 @@ Write in a vivid, engaging style appropriate for a {tone} comic book. Make the s
 """
 
     try:
-        response = client.chat.completions.create(
-            model=MODEL,
-            messages=[
-                {"role": "system", "content": f"You are a professional comic book writer specializing in {tone} storytelling. Write vivid, engaging narratives."},
-                {"role": "user", "content": prompt}
-            ],
-            temperature=0.8,
-            max_tokens=4096,
-        )
-        story_text = response.choices[0].message.content.strip()
+        response = model.generate_content(prompt)
+        story_text = response.text.strip()
         return story_text
 
     except Exception as e:
