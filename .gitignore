@@ -1,0 +1,24 @@
+# Environment
+.env
+env/
+venv/
+comiccraft-env/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+
+# Generated content
+static/panels/
+static/exports/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db

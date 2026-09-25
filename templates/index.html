@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="ComicCraft - Create AI-powered comic stories with Google Gemini and Stable Diffusion. Transform your ideas into stunning comic panels.">
+    <title>ComicCraft - AI Comic Story Creator</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎨</text></svg>">
+</head>
+<body>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">CRAFTING YOUR COMIC</div>
+        <div class="loading-subtitle">
+            Our AI is generating your story outline, writing narration,
+            creating illustrations, and building your comic...
+            <br>This may take a minute or two ✨
+        </div>
+    </div>
+
+    <div class="app-container">
+
+        <!-- Header -->
+        <header class="header" id="header">
+            <h1 class="logo">COMICCRAFT</h1>
+            <p class="tagline">AI-Powered Comic Story Creator • Powered by Gemini & Stable Diffusion</p>
+        </header>
+
+        <!-- Main Form Section -->
+        <main>
+            <section class="form-section">
+                <div class="glass-card">
+                    <h2 class="form-title">✨ CREATE YOUR COMIC ✨</h2>
+
+                    <form action="/generate" method="POST" id="comicForm" onsubmit="showLoading()">
+                        <div class="form-grid">
+
+                            <!-- Story Prompt -->
+                            <div class="form-group full-width">
+                                <label for="storyPrompt" class="form-label">📖 Story Prompt</label>
+                                <textarea
+                                    class="form-textarea"
+                                    id="storyPrompt"
+                                    name="story_prompt"
+                                    placeholder="Describe your comic story idea... e.g., 'A brave fox exploring an enchanted forest filled with magical creatures and ancient secrets'"
+                                    required
+                                ></textarea>
+                            </div>
+
+                            <!-- Character Name -->
+                            <div class="form-group">
+                                <label for="characterName" class="form-label">🦸 Main Character Name</label>
+                                <input
+                                    type="text"
+                                    class="form-input"
+                                    id="characterName"
+                                    name="character_name"
+                                    placeholder="e.g., Luna, Kai, Shadow"
+                                    value="Hero"
+                                    required
+                                >
+                            </div>
+
+                            <!-- Setting -->
+                            <div class="form-group">
+                                <label for="setting" class="form-label">🌍 Setting</label>
+                                <select class="form-select" id="setting" name="setting">
+                                    <option value="forest">🌲 Enchanted Forest</option>
+                                    <option value="school">🏫 School</option>
+                                    <option value="city">🏙️ Futuristic City</option>
+                                    <option value="space">🚀 Outer Space</option>
+                                    <option value="ocean">🌊 Deep Ocean</option>
+                                    <option value="mountain">⛰️ Mountain Kingdom</option>
+                                    <option value="desert">🏜️ Ancient Desert</option>
+                                </select>
+                            </div>
+
+                            <!-- Tone -->
+                            <div class="form-group">
+                                <label for="tone" class="form-label">🎭 Story Tone</label>
+                                <select class="form-select" id="tone" name="tone">
+                                    <option value="dramatic">🎬 Dramatic</option>
+                                    <option value="funny">😂 Funny</option>
+                                    <option value="poetic">🌸 Poetic</option>
+                                    <option value="light-hearted">☀️ Light-hearted</option>
+                                    <option value="mysterious">🔮 Mysterious</option>
+                                    <option value="action">⚡ Action-Packed</option>
+                                </select>
+                            </div>
+
+                            <!-- Art Style -->
+                            <div class="form-group">
+                                <label for="artStyle" class="form-label">🎨 Art Style</label>
+                                <select class="form-select" id="artStyle" name="art_style">
+                                    <option value="anime">🇯🇵 Anime</option>
+                                    <option value="comic book">📚 Classic Comic Book</option>
+                                    <option value="pixel art">👾 Pixel Art</option>
+                                    <option value="realistic">📷 Realistic</option>
+                                    <option value="watercolor">🎨 Watercolor</option>
+                                    <option value="manga">📖 Manga</option>
+                                </select>
+                            </div>
+
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="btn-center">
+                            <button type="submit" class="btn btn-primary" id="submitBtn">
+                                🚀 GENERATE MY COMIC
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Features Section -->
+            <section class="mt-40">
+                <div class="features-grid">
+                    <div class="feature-item">
+                        <span class="feature-icon">🧠</span>
+                        <span class="feature-name">AI Story Generation</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">🎨</span>
+                        <span class="feature-name">AI Illustrations</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">📑</span>
+                        <span class="feature-name">5-Panel Comics</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">📥</span>
+                        <span class="feature-name">PDF Download</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Test Image Result (if present) -->
+            {% if test_image %}
+            <section class="mt-40">
+                <div class="glass-card">
+                    <h3 class="form-title">🧪 IMAGE TEST RESULT</h3>
+                    <p class="scene-description">Prompt: {{ test_prompt }}</p>
+                    <div class="panel-image-wrapper mt-20">
+                        <img src="{{ test_image }}" alt="Test Image" class="panel-image">
+                    </div>
+                </div>
+            </section>
+            {% endif %}
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p class="footer-text">
+                ComicCraft © 2024 • Powered by
+                <a href="https://ai.google.dev/" target="_blank">Google Gemini</a> &
+                <a href="https://huggingface.co/" target="_blank">Stable Diffusion</a>
+            </p>
+        </footer>
+
+    </div>
+
+    <script>
+        function showLoading() {
+            document.getElementById('loadingOverlay').classList.add('active');
+        }
+    </script>
+</body>
+</html>

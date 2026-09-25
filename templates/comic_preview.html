@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Preview your AI-generated comic story - ComicCraft">
+    <title>Comic Preview - ComicCraft</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎨</text></svg>">
+</head>
+<body>
+
+    <div class="app-container">
+
+        <!-- Header -->
+        <header class="header">
+            <a href="/" style="text-decoration: none;">
+                <h1 class="logo">COMICCRAFT</h1>
+            </a>
+            <p class="tagline">Your AI-Generated Comic Story</p>
+        </header>
+
+        <!-- Comic Header -->
+        <section class="comic-header">
+            <h2 class="comic-title">{{ character_name }}'s Adventure</h2>
+            <p class="comic-subtitle">📖 "{{ story_prompt[:100] }}{% if story_prompt|length > 100 %}...{% endif %}"</p>
+        </section>
+
+        <!-- Comic Panels -->
+        <section class="panels-container">
+            {% for panel in layout %}
+            <article class="comic-panel" id="panel-{{ panel.panel_number }}">
+                <!-- Panel Header -->
+                <div class="panel-header">
+                    <div class="panel-number">{{ panel.panel_number }}</div>
+                    <h3 class="panel-title">{{ panel.title }}</h3>
+                </div>
+
+                <!-- Panel Body -->
+                <div class="panel-body">
+                    <!-- Image -->
+                    <div class="panel-image-wrapper">
+                        {% if panel.image_path %}
+                        <img
+                            src="{{ panel.image_path }}"
+                            alt="Panel {{ panel.panel_number }}: {{ panel.title }}"
+                            class="panel-image"
+                            loading="lazy"
+                        >
+                        {% else %}
+                        <div class="panel-image" style="height: 300px; display: flex; align-items: center; justify-content: center; background: rgba(107,70,229,0.1); color: var(--primary-300);">
+                            Image not available
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Content -->
+                    <div class="panel-content">
+                        <!-- Scene Description -->
+                        {% if panel.scene_description %}
+                        <div class="scene-description">
+                            {{ panel.scene_description }}
+                        </div>
+                        {% endif %}
+
+                        <!-- Panel Narration/Text -->
+                        {% if panel.text %}
+                        <div class="panel-text">
+                            {{ panel.text }}
+                        </div>
+                        {% endif %}
+
+                        <!-- Image Prompt Reference -->
+                        {% if panel.image_prompt %}
+                        <div class="image-prompt-ref">
+                            <span class="image-prompt-label">🎨 Image Prompt:</span><br>
+                            {{ panel.image_prompt }}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </article>
+            {% endfor %}
+        </section>
+
+        <!-- Download Section -->
+        <section class="download-section">
+            <div class="glass-card">
+                <h3 class="form-title">📥 DOWNLOAD YOUR COMIC</h3>
+                <p class="comic-subtitle mb-20">
+                    Your complete comic has been compiled into a beautiful PDF document.
+                    Download it to save, print, or share your creation!
+                </p>
+                <div class="btn-center" style="margin-top: 20px; gap: 16px; flex-wrap: wrap;">
+                    <a href="/download-pdf?path={{ pdf_path }}" class="btn btn-download" id="downloadBtn">
+                        📄 DOWNLOAD AS PDF
+                    </a>
+                    <a href="/export-success" class="btn btn-secondary" id="exportSuccessBtn"
+                       onclick="setTimeout(function(){ window.location.href='/export-success'; }, 100);">
+                        ✅ CONFIRM EXPORT
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Create Another -->
+        <div class="text-center mt-40">
+            <a href="/" class="btn btn-primary" id="createAnotherBtn">
+                ✨ CREATE ANOTHER COMIC
+            </a>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p class="footer-text">
+                ComicCraft © 2024 • Powered by
+                <a href="https://ai.google.dev/" target="_blank">Google Gemini</a> &
+                <a href="https://huggingface.co/" target="_blank">Stable Diffusion</a>
+            </p>
+        </footer>
+
+    </div>
+
+</body>
+</html>
